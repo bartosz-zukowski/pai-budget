@@ -20,6 +20,19 @@ let expensesChart; // Zmienna na instancję Chart.js
 let isEditing = false; // Flaga określająca, czy jesteśmy w trybie edycji
 let editingTransactionId = null; // Przechowuje ID transakcji, którą edytujemy
 
+// NOWY ELEMENT: Definicja stałych kolorów dla kategorii
+const CATEGORY_COLORS = {
+    'Jedzenie': '#FF6384',
+    'Transport': '#36A2EB',
+    'Rozrywka': '#FFCE56',
+    'Rachunki': '#4BC0C0',
+    'Zakupy': '#9966FF',
+    'Mieszkanie': '#FF9F40',
+    'Zdrowie': '#C9CBCF',
+    'Edukacja': '#7C4DFF',
+    'Inne': '#A5D6A7' // Domyślny dla nieokreślonych/nowych
+};
+
 // --- Funkcje pomocnicze do komunikacji z API i aktualizacji UI ---
 
 /**
@@ -93,7 +106,7 @@ function displayTransactions(transactions) {
         return;
     }
 
-    transactions.forEach(transaction => {
+    transactions.forEach((transaction, index) => {
         const li = document.createElement('li');
         li.classList.add('transaction-item', transaction.type);
         li.dataset.id = transaction.id;
@@ -120,6 +133,10 @@ function displayTransactions(transactions) {
             </div>
         `;
         transactionsList.appendChild(li);
+
+        setTimeout(() => {
+            li.classList.add('new-item');
+        }, 50 * index);
     });
 }
 
@@ -138,8 +155,11 @@ function drawExpensesChart(transactions) {
     const categories = Object.keys(categoryExpenses);
     const amounts = Object.values(categoryExpenses);
 
-    const backgroundColors = categories.map(() => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.7)`);
-    const borderColors = backgroundColors.map(color => color.replace('0.7', '1'));
+    // Zmienione: Używamy predefiniowanych kolorów lub generujemy losowy, jeśli brak
+    const backgroundColors = categories.map(category => CATEGORY_COLORS[category] || `#${Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')}`);
+    // Usunięte .replace('0.7', '1') bo kolory są już pełne (bez alfy)
+    const borderColors = backgroundColors; 
+
 
     if (expensesChart) {
         expensesChart.destroy();
@@ -152,7 +172,7 @@ function drawExpensesChart(transactions) {
             datasets: [{
                 data: amounts,
                 backgroundColor: backgroundColors,
-                borderColor: borderColors,
+                borderColor: borderColors, // Używamy tych samych kolorów dla obramowania
                 borderWidth: 1
             }]
         },
@@ -297,18 +317,14 @@ transactionsList.addEventListener('click', async (e) => {
         const transactionToEdit = await fetchTransactionById(id);
 
         if (transactionToEdit) {
-            // Ustaw flagę trybu edycji i ID
             isEditing = true;
             editingTransactionId = id;
 
-            // Wypełnij formularz danymi z transakcji
             formTitle.value = transactionToEdit.title;
             formAmount.value = transactionToEdit.amount;
             formCategory.value = transactionToEdit.category;
             formType.value = transactionToEdit.type;
 
-            // Formatowanie daty do input[type="datetime-local"]
-            // Flask zwraca datę w formacie ISO z 'Z', input oczekuje 'YYYY-MM-DDTHH:MM'
             const dateObj = new Date(transactionToEdit.date);
             const year = dateObj.getFullYear();
             const month = String(dateObj.getMonth() + 1).padStart(2, '0');
@@ -317,15 +333,14 @@ transactionsList.addEventListener('click', async (e) => {
             const minutes = String(dateObj.getMinutes()).padStart(2, '0');
             formDate.value = `${year}-${month}-${day}T${hours}:${minutes}`;
 
-            // Zmień tekst i styl przycisku
             formSubmitButton.textContent = 'Zapisz Zmiany';
-            formSubmitButton.style.backgroundColor = '#f39c12'; // Kolor edycji
+            formSubmitButton.style.backgroundColor = '#f39c12';
 
-            // Przewiń do formularza, aby użytkownik widział, że może edytować
-            formTitle.focus(); // Ustaw focus na pierwszym polu
+            formTitle.focus();
         }
     }
 });
+
 
 // Inicjalizacja aplikacji po całkowitym załadowaniu DOM
 document.addEventListener('DOMContentLoaded', initApp);

@@ -1,51 +1,94 @@
+/* personal-budget-manager/frontend/style.css - OSTATNIA KOREKTA CENTROWANIA - Wersja 3 */
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
-    padding: 20px;
+    padding: 0;
     background-color: #f4f7f6;
     color: #333;
+    line-height: 1.6;
+    display: flex;
+    justify-content: center; /* Centruj zawartość body poziomo */
+    align-items: flex-start; /* Zachowaj elementy na górze strony */
+    min-height: 100vh; /* Minimalna wysokość body, aby flexbox działał */
+    overflow-y: auto; /* Zezwól na przewijanie, jeśli zawartość jest dłuższa niż widok */
+    padding: 20px 0; /* Padding pionowy dla body */
 }
 
 .container {
-    max-width: 900px;
-    margin: 20px auto;
+    max-width: 950px;
+    width: 100%;
+    margin: 0 auto; /* **KLUCZOWE:** Centruj kontener poziomo w body */
     background-color: #fff;
     padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
     display: grid;
-    gap: 25px;
-    grid-template-columns: 1fr; /* Domyślnie jedna kolumna dla małych ekranów */
+    gap: 30px;
+    grid-template-columns: 1fr; /* Domyślnie jedna kolumna */
+    /* Usunięto justify-items i align-items z .container, bo będziemy je kontrolować na indywidualnych elementach grid */
 }
 
+/* Globalne style dla nagłówków */
 h1, h2 {
     color: #2c3e50;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    width: 100%; /* Upewnij się, że nagłówki zajmują całą szerokość rodzica */
+    box-sizing: border-box; /* Ważne dla paddingu/ramki */
+}
+
+h1 {
+    font-size: 2.5em;
+    margin-top: 0;
+    grid-column: 1 / -1; /* H1 zawsze rozciąga się na całą szerokość grid */
+}
+
+h2 {
+    font-size: 1.8em;
+}
+
+/* Style dla sekcji */
+.balance-section, .form-section, .transactions-section, .chart-section {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    border: 1px solid #eee;
+    width: 100%; /* Sekcje domyślnie wypełniają swoją kolumnę */
+    box-sizing: border-box;
+    /* Używamy flexbox wewnątrz sekcji do centrowania ich WŁASNEJ zawartości */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centruj zawartość sekcji poziomo */
 }
 
 .balance-section {
-    background-color: #e8f5e9; /* Jasnozielony dla salda */
-    padding: 20px;
-    border-radius: 8px;
+    background-color: #e8f5e9;
+    padding: 30px;
     text-align: center;
-    font-size: 1.2em;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    font-size: 1.3em;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    border: 1px solid #d4edda;
+    grid-column: 1 / -1; /* Rozciągnij sekcję salda na całą szerokość grid */
 }
 
 #current-balance {
-    font-weight: bold;
-    color: #27ae60; /* Ciemnozielony */
+    font-weight: bolder;
+    color: #27ae60;
+    font-size: 1.8em;
+    display: block;
+    margin-top: 10px;
 }
 
-.form-section, .transactions-section, .chart-section {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
+/* Formularz w sekcji */
 .form-section form {
+    width: 100%; /* Formularz zawsze zajmuje 100% szerokości sekcji */
+    max-width: 400px; /* Ogranicz maksymalną szerokość formularza */
+    margin: 0 auto; /* Centruj formularz wewnątrz .form-section */
     display: flex;
     flex-direction: column;
 }
@@ -53,59 +96,102 @@ h1, h2 {
 .form-section label {
     margin-bottom: 8px;
     font-weight: bold;
+    color: #555;
+    font-size: 0.95em;
+    width: 100%;
+    text-align: left;
 }
 
 .form-section input[type="text"],
 .form-section input[type="number"],
 .form-section select,
 .form-section input[type="datetime-local"] {
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 12px;
+    margin-bottom: 18px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
     font-size: 1em;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-section input[type="text"]:focus,
+.form-section input[type="number"]:focus,
+.form-section select:focus,
+.form-section input[type="datetime-local"]:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    outline: none;
 }
 
 .form-section button {
     background-color: #3498db;
     color: white;
-    padding: 12px 20px;
+    padding: 15px 25px;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 1.1em;
-    transition: background-color 0.3s ease;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .form-section button:hover {
     background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Lista transakcji */
+.form-section button:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* Lista transakcji w sekcji */
 #transactions-list {
     list-style: none;
     padding: 0;
+    width: 100%; /* Lista zawsze zajmuje 100% szerokości sekcji */
+    max-width: 600px; /* Ogranicz maksymalną szerokość listy */
+    margin: 0 auto; /* Centruj listę wewnątrz .transactions-section */
+}
+
+.no-transactions {
+    text-align: center;
+    color: #7f8c8d;
+    font-style: italic;
+    padding: 20px;
+    border: 1px dashed #ccc;
+    border-radius: 8px;
+    margin-top: 15px;
+    background-color: #f9f9f9;
+    width: 100%; /* Upewnij się, że ten komunikat zajmuje 100% szerokości */
+    box-sizing: border-box;
 }
 
 .transaction-item {
     background-color: #fdfdfd;
     border: 1px solid #eee;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 5px;
+    padding: 15px 20px;
+    margin-bottom: 12px;
+    border-radius: 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-    position: relative; /* dla animacji usuwania */
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .transaction-item.expense {
-    border-left: 5px solid #e74c3c; /* Czerwony dla wydatków */
+    border-left: 8px solid #e74c3c;
 }
 
 .transaction-item.income {
-    border-left: 5px solid #2ecc71; /* Zielony dla dochodów */
+    border-left: 8px solid #2ecc71;
 }
 
 .transaction-details {
@@ -114,7 +200,7 @@ h1, h2 {
 
 .transaction-details h3 {
     margin: 0 0 5px 0;
-    font-size: 1.1em;
+    font-size: 1.25em;
     color: #34495e;
 }
 
@@ -124,22 +210,28 @@ h1, h2 {
     color: #7f8c8d;
 }
 
+.transaction-actions {
+    display: flex;
+    gap: 8px;
+}
+
 .transaction-actions button {
-    background-color: #f39c12; /* Edycja */
+    background-color: #f39c12;
     color: white;
     border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
+    padding: 9px 15px;
+    border-radius: 5px;
     cursor: pointer;
-    margin-left: 10px;
-    transition: background-color 0.2s ease;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease, transform 0.2s ease;
 }
 .transaction-actions button:hover {
     background-color: #e67e22;
+    transform: translateY(-1px);
 }
 
 .transaction-actions button.delete {
-    background-color: #e74c3c; /* Usuwanie */
+    background-color: #e74c3c;
 }
 .transaction-actions button.delete:hover {
     background-color: #c0392b;
@@ -149,37 +241,106 @@ h1, h2 {
 .transaction-item.fade-out {
     opacity: 0;
     transform: translateX(-100%);
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+@keyframes slideInFromBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.transaction-item.new-item {
+    animation: slideInFromBottom 0.4s ease-out forwards;
+}
+
+/* Sekcja wykresu */
+.chart-section {
+    min-height: 300px; /* **NOWOŚĆ:** Zapewnij minimalną wysokość dla wykresu */
+    justify-content: center; /* Centruj zawartość wykresu pionowo */
+    align-items: center; /* Centruj zawartość wykresu poziomo */
 }
 
 /* Responsywność */
-@media (min-width: 768px) {
+@media (min-width: 850px) {
     .container {
-        grid-template-columns: 2fr 1fr; /* Dwie kolumny: lista + formularz/wykres */
+        grid-template-columns: 2fr 1fr; /* Dwie kolumny */
+        gap: 30px;
     }
-    .balance-section {
-        grid-column: 1 / -1; /* Rozciągnij na całą szerokość */
-    }
-    .form-section {
-        grid-column: 1 / 2; /* Formularz w pierwszej kolumnie */
-    }
-    .transactions-section {
-        grid-column: 1 / 2; /* Lista w pierwszej kolumnie */
-        grid-row: 3; /* Ustawienie pod formularzem */
-    }
+
+    /* Nadpisujemy domyślne centrowanie na elementy grid, jeśli chcemy by wypełniały szerokość kolumny */
+    .form-section,
+    .transactions-section,
     .chart-section {
-        grid-column: 2 / 3; /* Wykres w drugiej kolumnie */
-        grid-row: 2 / span 2; /* Rozciągnij obok formularza i listy */
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+        grid-column: auto; /* Resetujemy pozycje grid */
+        grid-row: auto;
+        width: 100%; /* Sekcje mają wypełniać całą dostępną szerokość kolumny grid */
+        /* display: flex; flex-direction: column; align-items: center; -> te wartości są już w globalnych stylach i powinny się utrzymać */
     }
-    .transactions-section {
-        order: 3; /* Zapewnij kolejność elementów */
-    }
+
     .form-section {
+        grid-column: 1 / 2;
         order: 2;
     }
+    .transactions-section {
+        grid-column: 1 / 2;
+        order: 3;
+    }
     .chart-section {
+        grid-column: 2 / 3;
+        grid-row: 2 / span 2;
         order: 4;
+        min-height: 400px; /* Zwiększ minimalną wysokość wykresu na dużych ekranach */
+    }
+}
+
+/* Małe ekrany (do 849px) */
+@media (max-width: 849px) {
+    body {
+        padding: 10px;
+    }
+    .container {
+        margin: 0 auto;
+        padding: 20px;
+        gap: 20px;
+    }
+    h1 {
+        font-size: 2em;
+    }
+    h2 {
+        font-size: 1.5em;
+    }
+    /* Te style są już globalnie ustawione na 100% i box-sizing: border-box */
+    /* .form-section input,
+    .form-section select,
+    .form-section button {
+        width: 100%;
+        box-sizing: border-box;
+    } */
+    .transaction-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 12px 15px;
+    }
+    .transaction-details h3 {
+        font-size: 1.1em;
+    }
+    .transaction-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+    .transaction-actions button {
+        margin-left: 0;
+        padding: 8px 12px;
+        font-size: 0.85em;
+    }
+    .chart-section {
+        min-height: 250px; /* Minimalna wysokość wykresu na małych ekranach */
     }
 }
