@@ -1,0 +1,185 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f7f6;
+    color: #333;
+}
+
+.container {
+    max-width: 900px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: grid;
+    gap: 25px;
+    grid-template-columns: 1fr; /* Domyślnie jedna kolumna dla małych ekranów */
+}
+
+h1, h2 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.balance-section {
+    background-color: #e8f5e9; /* Jasnozielony dla salda */
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1.2em;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+#current-balance {
+    font-weight: bold;
+    color: #27ae60; /* Ciemnozielony */
+}
+
+.form-section, .transactions-section, .chart-section {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.form-section form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-section label {
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.form-section input[type="text"],
+.form-section input[type="number"],
+.form-section select,
+.form-section input[type="datetime-local"] {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.form-section button {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease;
+}
+
+.form-section button:hover {
+    background-color: #2980b9;
+}
+
+/* Lista transakcji */
+#transactions-list {
+    list-style: none;
+    padding: 0;
+}
+
+.transaction-item {
+    background-color: #fdfdfd;
+    border: 1px solid #eee;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    position: relative; /* dla animacji usuwania */
+}
+
+.transaction-item.expense {
+    border-left: 5px solid #e74c3c; /* Czerwony dla wydatków */
+}
+
+.transaction-item.income {
+    border-left: 5px solid #2ecc71; /* Zielony dla dochodów */
+}
+
+.transaction-details {
+    flex-grow: 1;
+}
+
+.transaction-details h3 {
+    margin: 0 0 5px 0;
+    font-size: 1.1em;
+    color: #34495e;
+}
+
+.transaction-details p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #7f8c8d;
+}
+
+.transaction-actions button {
+    background-color: #f39c12; /* Edycja */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: background-color 0.2s ease;
+}
+.transaction-actions button:hover {
+    background-color: #e67e22;
+}
+
+.transaction-actions button.delete {
+    background-color: #e74c3c; /* Usuwanie */
+}
+.transaction-actions button.delete:hover {
+    background-color: #c0392b;
+}
+
+/* Animacje */
+.transaction-item.fade-out {
+    opacity: 0;
+    transform: translateX(-100%);
+}
+
+/* Responsywność */
+@media (min-width: 768px) {
+    .container {
+        grid-template-columns: 2fr 1fr; /* Dwie kolumny: lista + formularz/wykres */
+    }
+    .balance-section {
+        grid-column: 1 / -1; /* Rozciągnij na całą szerokość */
+    }
+    .form-section {
+        grid-column: 1 / 2; /* Formularz w pierwszej kolumnie */
+    }
+    .transactions-section {
+        grid-column: 1 / 2; /* Lista w pierwszej kolumnie */
+        grid-row: 3; /* Ustawienie pod formularzem */
+    }
+    .chart-section {
+        grid-column: 2 / 3; /* Wykres w drugiej kolumnie */
+        grid-row: 2 / span 2; /* Rozciągnij obok formularza i listy */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .transactions-section {
+        order: 3; /* Zapewnij kolejność elementów */
+    }
+    .form-section {
+        order: 2;
+    }
+    .chart-section {
+        order: 4;
+    }
+}

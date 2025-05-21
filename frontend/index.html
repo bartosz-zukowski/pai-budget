@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Budget Manager</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Mój Osobisty Menedżer Budżetu</h1>
+
+        <div class="balance-section">
+            <h2>Aktualne Saldo: <span id="current-balance">0.00 PLN</span></h2>
+        </div>
+
+        <div class="form-section">
+            <h2>Dodaj Nową Transakcję</h2>
+            <form id="transaction-form">
+                <label for="title">Tytuł:</label>
+                <input type="text" id="title" required>
+
+                <label for="amount">Kwota:</label>
+                <input type="number" id="amount" step="0.01" required min="0.01">
+
+                <label for="category">Kategoria:</label>
+                <select id="category" required>
+                    <option value="">Wybierz kategorię</option>
+                    <option value="Jedzenie">Jedzenie</option>
+                    <option value="Transport">Transport</option>
+                    <option value="Rozrywka">Rozrywka</option>
+                    <option value="Rachunki">Rachunki</option>
+                    <option value="Ubrania">Ubrania</option>
+                    <option value="Edukacja">Edukacja</option>
+                    <option value="Zdrowie">Zdrowie</option>
+                    <option value="Pensja">Pensja</option>
+                    <option value="Inne">Inne</option>
+                </select>
+
+                <label for="type">Typ:</label>
+                <select id="type" required>
+                    <option value="expense">Wydatek</option>
+                    <option value="income">Dochód</option>
+                </select>
+
+                <label for="date">Data i Godzina:</label>
+                <input type="datetime-local" id="date" required>
+
+                <button type="submit">Dodaj Transakcję</button>
+            </form>
+        </div>
+
+        <div class="transactions-section">
+            <h2>Lista Transakcji</h2>
+            <ul id="transactions-list">
+                </ul>
+        </div>
+
+        <div class="chart-section">
+            <h2>Wydatki na Kategorie</h2>
+            <canvas id="expenses-chart"></canvas>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
