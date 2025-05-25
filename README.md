@@ -33,7 +33,6 @@ pai-budget/
 ├── index.html            # Główna strona aplikacji
 ├── style.css             # Style CSS dla aplikacji
 └── script.js             # Logika JavaScript dla interfejsu użytkownika
-
 ---
 
 ## Wymagania
