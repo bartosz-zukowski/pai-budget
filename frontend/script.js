@@ -1,6 +1,4 @@
-// personal-budget-manager/frontend/script.js
-
-const API_URL = 'http://127.0.0.1:5000'; // Adres Twojego backendu Flask
+const API_URL = 'http://127.0.0.1:5000'; 
 
 // Elementy DOM
 const balanceSpan = document.getElementById('current-balance');
@@ -8,7 +6,7 @@ const transactionForm = document.getElementById('transaction-form');
 const transactionsList = document.getElementById('transactions-list');
 const expensesChartCanvas = document.getElementById('expenses-chart');
 
-// Nowe elementy DOM dla formularza edycji
+// Elementy DOM dla formularza edycji
 const formTitle = document.getElementById('title');
 const formAmount = document.getElementById('amount');
 const formCategory = document.getElementById('category');
@@ -16,11 +14,12 @@ const formType = document.getElementById('type');
 const formDate = document.getElementById('date');
 const formSubmitButton = transactionForm.querySelector('button[type="submit"]');
 
-let expensesChart; // Zmienna na instancję Chart.js
-let isEditing = false; // Flaga określająca, czy jesteśmy w trybie edycji
-let editingTransactionId = null; // Przechowuje ID transakcji, którą edytujemy
+let expensesChart; 
+let isEditing = false; 
+let editingTransactionId = null; 
 
-// NOWY ELEMENT: Definicja stałych kolorów dla kategorii
+
+// Predefiniowane kolory dla kategorii wydatków
 const CATEGORY_COLORS = {
     'Jedzenie': '#FF6384',
     'Transport': '#36A2EB',
@@ -155,9 +154,9 @@ function drawExpensesChart(transactions) {
     const categories = Object.keys(categoryExpenses);
     const amounts = Object.values(categoryExpenses);
 
-    // Zmienione: Używamy predefiniowanych kolorów lub generujemy losowy, jeśli brak
+    
     const backgroundColors = categories.map(category => CATEGORY_COLORS[category] || `#${Math.floor(Math.random()*16777215).toString(16).padStart(6, '0')}`);
-    // Usunięte .replace('0.7', '1') bo kolory są już pełne (bez alfy)
+
     const borderColors = backgroundColors; 
 
 
@@ -196,11 +195,11 @@ function drawExpensesChart(transactions) {
  */
 function resetForm() {
     transactionForm.reset();
-    formCategory.value = ''; // Upewnij się, że kategoria jest zresetowana
+    formCategory.value = ''; 
     isEditing = false;
     editingTransactionId = null;
-    formSubmitButton.textContent = 'Dodaj Transakcję'; // Zmień tekst przycisku
-    formSubmitButton.style.backgroundColor = '#3498db'; // Przywróć domyślny kolor
+    formSubmitButton.textContent = 'Dodaj Transakcję'; 
+    formSubmitButton.style.backgroundColor = '#3498db'; 
 }
 
 /**
@@ -211,7 +210,7 @@ async function initApp() {
     updateBalance(transactions);
     displayTransactions(transactions);
     drawExpensesChart(transactions);
-    resetForm(); // Zawsze resetuj formularz przy inicjalizacji/odświeżeniu
+    resetForm(); 
 }
 
 // --- Obsługa zdarzeń ---
@@ -246,7 +245,7 @@ transactionForm.addEventListener('submit', async (e) => {
     try {
         let response;
         if (isEditing) {
-            // Tryb edycji: wysyłamy PUT
+            // Tryb edycji: PUT
             response = await fetch(`${API_URL}/transactions/${editingTransactionId}`, {
                 method: 'PUT',
                 headers: {
@@ -255,7 +254,7 @@ transactionForm.addEventListener('submit', async (e) => {
                 body: JSON.stringify(transactionData),
             });
         } else {
-            // Tryb dodawania: wysyłamy POST
+            // Tryb dodawania: POST
             response = await fetch(`${API_URL}/transactions`, {
                 method: 'POST',
                 headers: {
@@ -270,7 +269,7 @@ transactionForm.addEventListener('submit', async (e) => {
             throw new Error(`Błąd HTTP! Status: ${response.status}, Wiadomość: ${errorData.message || 'Nieznany błąd'}`);
         }
 
-        initApp(); // Po pomyślnym dodaniu/edycji odśwież dane
+        initApp(); // Odświeżenie danych po dodaniu/edycji
         alert(`Transakcja ${isEditing ? 'zaktualizowana' : 'dodana'} pomyślnie!`);
 
     } catch (error) {
@@ -300,7 +299,7 @@ transactionsList.addEventListener('click', async (e) => {
                 if (listItem) {
                     listItem.classList.add('fade-out');
                     listItem.addEventListener('transitionend', () => {
-                        initApp(); // Po zakończeniu animacji odśwież listę
+                        initApp(); 
                     });
                 }
 

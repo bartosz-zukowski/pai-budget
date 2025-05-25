@@ -1,4 +1,3 @@
-/* personal-budget-manager/frontend/style.css - OSTATNIA KOREKTA CENTROWANIA - Wersja 3 */
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -18,7 +17,7 @@ body {
 .container {
     max-width: 950px;
     width: 100%;
-    margin: 0 auto; /* **KLUCZOWE:** Centruj kontener poziomo w body */
+    margin: 0 auto; /* Centruj kontener */
     background-color: #fff;
     padding: 30px;
     border-radius: 12px;
@@ -26,7 +25,7 @@ body {
     display: grid;
     gap: 30px;
     grid-template-columns: 1fr; /* Domyślnie jedna kolumna */
-    /* Usunięto justify-items i align-items z .container, bo będziemy je kontrolować na indywidualnych elementach grid */
+
 }
 
 /* Globalne style dla nagłówków */
@@ -36,14 +35,14 @@ h1, h2 {
     margin-bottom: 25px;
     font-weight: 600;
     letter-spacing: 0.5px;
-    width: 100%; /* Upewnij się, że nagłówki zajmują całą szerokość rodzica */
-    box-sizing: border-box; /* Ważne dla paddingu/ramki */
+    width: 100%; 
+    box-sizing: border-box; 
 }
 
 h1 {
     font-size: 2.5em;
     margin-top: 0;
-    grid-column: 1 / -1; /* H1 zawsze rozciąga się na całą szerokość grid */
+    grid-column: 1 / -1; 
 }
 
 h2 {
@@ -57,12 +56,12 @@ h2 {
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
     border: 1px solid #eee;
-    width: 100%; /* Sekcje domyślnie wypełniają swoją kolumnę */
+    width: 100%; 
     box-sizing: border-box;
-    /* Używamy flexbox wewnątrz sekcji do centrowania ich WŁASNEJ zawartości */
+    
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centruj zawartość sekcji poziomo */
+    align-items: center; 
 }
 
 .balance-section {
@@ -86,9 +85,9 @@ h2 {
 
 /* Formularz w sekcji */
 .form-section form {
-    width: 100%; /* Formularz zawsze zajmuje 100% szerokości sekcji */
-    max-width: 400px; /* Ogranicz maksymalną szerokość formularza */
-    margin: 0 auto; /* Centruj formularz wewnątrz .form-section */
+    width: 100%; 
+    max-width: 400px; 
+    margin: 0 auto; 
     display: flex;
     flex-direction: column;
 }
@@ -154,9 +153,9 @@ h2 {
 #transactions-list {
     list-style: none;
     padding: 0;
-    width: 100%; /* Lista zawsze zajmuje 100% szerokości sekcji */
-    max-width: 600px; /* Ogranicz maksymalną szerokość listy */
-    margin: 0 auto; /* Centruj listę wewnątrz .transactions-section */
+    width: 100%; 
+    max-width: 600px; 
+    margin: 0 auto; 
 }
 
 .no-transactions {
@@ -168,7 +167,7 @@ h2 {
     border-radius: 8px;
     margin-top: 15px;
     background-color: #f9f9f9;
-    width: 100%; /* Upewnij się, że ten komunikat zajmuje 100% szerokości */
+    width: 100%; 
     box-sizing: border-box;
 }
 
@@ -261,15 +260,15 @@ h2 {
 
 /* Sekcja wykresu */
 .chart-section {
-    min-height: 300px; /* **NOWOŚĆ:** Zapewnij minimalną wysokość dla wykresu */
-    justify-content: center; /* Centruj zawartość wykresu pionowo */
-    align-items: center; /* Centruj zawartość wykresu poziomo */
+    min-height: 300px; 
+    justify-content: center; 
+    align-items: center; 
 }
 
 /* Responsywność */
 @media (min-width: 850px) {
     .container {
-        grid-template-columns: 2fr 1fr; /* Dwie kolumny */
+        grid-template-columns: 2fr 1fr; 
         gap: 30px;
     }
 
@@ -277,10 +276,10 @@ h2 {
     .form-section,
     .transactions-section,
     .chart-section {
-        grid-column: auto; /* Resetujemy pozycje grid */
+        grid-column: auto; 
         grid-row: auto;
-        width: 100%; /* Sekcje mają wypełniać całą dostępną szerokość kolumny grid */
-        /* display: flex; flex-direction: column; align-items: center; -> te wartości są już w globalnych stylach i powinny się utrzymać */
+        width: 100%; 
+        
     }
 
     .form-section {
@@ -295,7 +294,7 @@ h2 {
         grid-column: 2 / 3;
         grid-row: 2 / span 2;
         order: 4;
-        min-height: 400px; /* Zwiększ minimalną wysokość wykresu na dużych ekranach */
+        min-height: 400px;
     }
 }
 
@@ -315,13 +314,7 @@ h2 {
     h2 {
         font-size: 1.5em;
     }
-    /* Te style są już globalnie ustawione na 100% i box-sizing: border-box */
-    /* .form-section input,
-    .form-section select,
-    .form-section button {
-        width: 100%;
-        box-sizing: border-box;
-    } */
+
     .transaction-item {
         flex-direction: column;
         align-items: flex-start;
@@ -341,6 +334,6 @@ h2 {
         font-size: 0.85em;
     }
     .chart-section {
-        min-height: 250px; /* Minimalna wysokość wykresu na małych ekranach */
+        min-height: 250px; 
     }
 }
