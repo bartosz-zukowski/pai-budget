@@ -10,7 +10,6 @@ app = Flask(__name__)
 CORS(app) # Włączamy CORS dla całej aplikacji
 
 # Konfiguracja bazy danych SQLite
-# Utwórz ścieżkę do pliku bazy danych w tym samym katalogu co app.py
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'budget.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # Wyłącza śledzenie modyfikacji obiektów (niepotrzebne i zużywa zasoby)
@@ -60,7 +59,7 @@ def add_transaction():
     type = data.get('type')
     date_str = data.get('date') # Data jako string, np. '2023-10-26T14:30:00'
 
-    # Prosta walidacja (można rozbudować)
+    # Walidacja danych wejściowych
     if not all([title, amount, category, type, date_str]):
         return jsonify({'message': 'Missing data. Required: title, amount, category, type, date'}), 400
     if not isinstance(amount, (int, float)) or amount <= 0:
@@ -68,7 +67,7 @@ def add_transaction():
     if type not in ['income', 'expense']:
         return jsonify({'message': 'Type must be "income" or "expense"'}), 400
     try:
-        # Parsowanie daty. Używamy fromisoformat dla dat w formacie ISO
+        # Parsowanie daty z formatu ISO 8601
         transaction_date = datetime.fromisoformat(date_str.replace('Z', '')) # Usunięcie 'Z' przed parsowaniem
     except ValueError:
         return jsonify({'message': 'Invalid date format. Use ISO 8601 (e.g., 2023-10-26T14:30:00)'}), 400
@@ -90,7 +89,6 @@ def add_transaction():
 @app.route('/transactions', methods=['GET'])
 def get_transactions():
     transactions = Transaction.query.all()
-    # Zwracamy listę słowników (transakcji)
     return jsonify([t.to_dict() for t in transactions])
 
 # Pobieranie pojedynczej transakcji
@@ -108,7 +106,7 @@ def update_transaction(id):
     if not data:
         return jsonify({'message': 'No data provided'}), 400
 
-    # Aktualizujemy tylko te pola, które zostały przekazane
+    # Aktualizacja pól transakcji na podstawie danych wejściowych
     transaction.title = data.get('title', transaction.title)
     transaction.amount = data.get('amount', transaction.amount)
     transaction.category = data.get('category', transaction.category)
@@ -132,7 +130,7 @@ def update_transaction(id):
 # Usuwanie transakcji
 @app.route('/transactions/<int:id>', methods=['DELETE'])
 def delete_transaction(id):
-    transaction = db.session.get(Transaction, id) # Użyj db.session.get() dla pewności
+    transaction = db.session.get(Transaction, id) 
     if transaction is None:
         return jsonify({'message': 'Transaction not found'}), 404
 
@@ -141,6 +139,6 @@ def delete_transaction(id):
     return jsonify({'message': 'Transaction deleted successfully'})
 
 if __name__ == '__main__':
-    with app.app_context(): # Upewnij się, że kontekst aplikacji jest aktywny przy tworzeniu tabel
-        db.create_all() # Tworzy tabele, jeśli jeszcze nie istnieją
-    app.run(debug=True, port=5000) # Uruchamiamy aplikację w trybie debugowania na porcie 5000
+    with app.app_context(): 
+        db.create_all() 
+    app.run(debug=True, port=5000) # Uruchamia aplikację Flask na porcie 5000
