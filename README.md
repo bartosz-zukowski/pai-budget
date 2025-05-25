@@ -24,15 +24,6 @@ Projekt jest podzielony na dwie główne części:
 * `backend/`: Zawiera logikę serwera Flask (`app.py`) i plik z danymi (`transactions.json`).
 * `frontend/`: Zawiera pliki interfejsu użytkownika (HTML, CSS, JavaScript).
 
-pai-budget/
-├── backend/
-│   ├── venv/                 # Środowisko wirtualne Pythona
-│   ├── app.py                # Główna aplikacja Flask (backend)
-│   └── transactions.json     # Plik do przechowywania danych o transakcjach
-└── frontend/
-├── index.html            # Główna strona aplikacji
-├── style.css             # Style CSS dla aplikacji
-└── script.js             # Logika JavaScript dla interfejsu użytkownika
 ---
 
 ## Wymagania
