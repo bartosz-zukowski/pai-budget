@@ -1,29 +1,28 @@
-# Osobisty Menedżer Budżetu 1.0
+# Osobisty Menedżer Budżetu
 
-Osobisty Menedżer Budżetu to prosta, ale skuteczna aplikacja webowa, która pomoże Ci śledzić Twoje dochody i wydatki. Zbudowana z użyciem **Flask** na backendzie oraz **HTML, CSS i JavaScript** na frontendzie, zapewnia intuicyjny interfejs do zarządzania finansami osobistymi, monitorowania salda i wizualizacji wydatków.
+Osobisty Menedżer Budżetu to prosta, ale skuteczna aplikacja webowa, która pomoże Ci śledzić Twoje dochody i wydatki. Zbudowana z użyciem **Flask** (z **Flask-SQLAlchemy** do zarządzania bazą danych) na backendzie oraz **HTML, CSS i JavaScript** na frontendzie, zapewnia intuicyjny interfejs do zarządzania finansami osobistymi, monitorowania salda i wizualizacji wydatków.
 
 ---
 
 ## Cechy
 
-* **Logowanie użytkownika** - wersja 1.1: Prosty system logowania zabezpiecza dostęp do Twoich danych finansowych.
 * **Dodawanie transakcji**: Łatwo dodawaj nowe dochody i wydatki z tytułem, kwotą, kategorią i datą.
 * **Edycja i usuwanie transakcji**: Pełna kontrola nad Twoimi danymi finansowymi dzięki możliwości edycji i usuwania istniejących transakcji.
 * **Aktualne saldo**: Natychmiastowy podgląd Twojego aktualnego bilansu finansowego.
-* **Filtrowanie transakcji**: Przeglądaj transakcje według kategorii, aby szybko znaleźć to, czego potrzebujesz.
 * **Wykres wydatków**: Wizualizacja rozkładu Twoich wydatków na kategorie za pomocą interaktywnego wykresu kołowego (Chart.js).
 * **Responsywny design**: Aplikacja wygląda i działa świetnie na różnych urządzeniach (komputery, tablety, smartfony).
-* **Dane**: Transakcje są zapisywane w pliku JSON na serwerze, dzięki czemu dane nie znikają po zamknięciu aplikacji.
+* **Dane**: Transakcje są bezpiecznie zapisywane w lokalnej bazie danych **SQLite** (`budget.db`), dzięki czemu dane nie znikają po zamknięciu aplikacji.
 
 ---
 
 ## Struktura Projektu
 
-Projekt jest podzielony na dwie główne części:
-
-* `backend/`: Zawiera logikę serwera Flask (`app.py`) i plik z danymi (`transactions.json`).
-* `frontend/`: Zawiera pliki interfejsu użytkownika (HTML, CSS, JavaScript).
-
+Projekt ma następującą strukturę katalogów:
+backend/static - script.js oraz style.css
+backend/templates - index.html
+backend - folder dla środowiska wirtualnego oraz plików app.py, budget.db
+README.md
+requirements.txt
 ---
 
 ## Wymagania
@@ -39,18 +38,13 @@ Aby uruchomić aplikację, potrzebujesz:
 
 Wykonaj poniższe kroki, aby zainstalować i uruchomić aplikację:
 
-1.  **Sklonuj lub pobierz repozytorium** (jeśli jest hostowane na GitHubie, w przeciwnym razie stwórz strukturę folderów i umieść w nich pliki):
+1.  **Sklonuj lub pobierz repozytorium**:
     ```bash
-    git clone [https://github.com/bartosz-zukowski/pai-budget.git](https://github.com/bartosz-zukowski/pai-budget.git)
+    git clone https://github.com/bartosz-zukowski/pai-budget.git
     cd pai-budget
     ```
 
-2.  **Przejdź do katalogu `backend`**:
-    ```bash
-    cd backend
-    ```
-
-3.  **Utwórz i aktywuj wirtualne środowisko** (zalecane):
+2.  **Utwórz i aktywuj wirtualne środowisko** (zalecane):
     * **Na Windowsie**:
         ```bash
         python -m venv venv
@@ -62,43 +56,34 @@ Wykonaj poniższe kroki, aby zainstalować i uruchomić aplikację:
         source venv/bin/activate
         ```
 
-4.  **Zainstaluj wymagane pakiety Pythona**:
+3.  **Zainstaluj wymagane pakiety Pythona**:
     ```bash
-    pip install Flask Flask-CORS Flask-Login Werkzeug
+    pip install Flask Flask-SQLAlchemy Flask-CORS
+    ```
     lub
+    ```bash
     pip install -r requirements.txt
     ```
 
-5.  **Uruchom aplikację Flask**:
+4.  **Uruchom aplikację Flask**:
+    Z folderu backend uruchom:
     ```bash
     python app.py
     ```
-    Serwer Flask zostanie uruchomiony na adresie `http://127.0.0.1:5000`.
+    Serwer Flask zostanie uruchomiony na adresie `http://127.0.0.1:5000/`. W konsoli zobaczysz również ścieżkę, pod którą tworzony/odczytywany jest plik `budget.db`.
 
-6.  **Otwórz aplikację w przeglądarce**:
+5.  **Otwórz aplikację w przeglądarce**:
     Przejdź do `http://127.0.0.1:5000/` w swojej ulubionej przeglądarce.
-
----
-
-## Logowanie
-
-Domyślne dane logowania (zdefiniowane w `backend/app.py`):
-
-* **Nazwa użytkownika**: `admin`
-* **Hasło**: `haslo_admina`
-
-**Pamiętaj**: W pliku `app.py` znajduje się sekcja, w której możesz zmienić domyślne hasło administratora na własne, używając funkcji `generate_password_hash` z `werkzeug.security` w konsoli Pythona i wklejając wygenerowany hash.
 
 ---
 
 ## Użycie
 
-Po zalogowaniu możesz:
+Po uruchomieniu aplikacji w przeglądarce możesz:
 
 * Dodawać nowe transakcje, wypełniając formularz.
 * Edytować istniejące transakcje, klikając przycisk "Edytuj" obok nich.
 * Usuwać transakcje, klikając przycisk "Usuń".
-* Filtrować transakcje według kategorii za pomocą rozwijanej listy.
 * Monitorować swoje saldo i przeglądać wykres wydatków.
 
 ---
@@ -107,11 +92,11 @@ Po zalogowaniu możesz:
 
 Ten projekt może być rozbudowywany o wiele dodatkowych funkcji, takich jak:
 
-* Panel Logowania.
+* Panel logowania i zarządzanie użytkownikami.
+* Filtrowanie i sortowanie transakcji (np. według daty, kategorii, typu).
 * Generowanie raportów finansowych (np. miesięczne, roczne).
 * Ustawianie budżetów dla poszczególnych kategorii.
-* Funkcje resetowania hasła.
-* Eksportowanie danych do CSV/Excel.
+* Eksportowanie danych do formatów CSV/Excel.
 
 ---
 
@@ -121,4 +106,4 @@ Ten projekt jest udostępniony na licencji MIT.
 
 ---
 
-**Autor**: [Bartosz Żukowski, ]
+**Autor**: [Bartosz Żukowski, Jagoda Brodowicz, Hubert Romanik, Kuba Trochimiuk, Łukasz Puchajda]
