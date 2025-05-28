@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mój Budżet - Aplikacja do zarządzania finansami</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Mój Budżet</h1>
+
+        <div class="balance-summary">
+            <h2>Aktualne Saldo: <span id="current-balance">0.00 PLN</span></h2>
+        </div>
+
+        <div class="form-section">
+            <h2>Dodaj/Edytuj Transakcję</h2>
+            <form id="transaction-form">
+                <div class="form-group">
+                    <label for="title">Tytuł Transakcji:</label>
+                    <input type="text" id="title" required placeholder="Np. Zakupy spożywcze">
+                </div>
+                <div class="form-group">
+                    <label for="amount">Kwota:</label>
+                    <input type="number" id="amount" step="0.01" required min="0.01" placeholder="Np. 50.00">
+                </div>
+                <div class="form-group">
+                    <label for="category">Kategoria:</label>
+                    <select id="category" required>
+                        <option value="">Wybierz kategorię</option>
+                        <option value="Jedzenie">Jedzenie</option>
+                        <option value="Transport">Transport</option>
+                        <option value="Rozrywka">Rozrywka</option>
+                        <option value="Rachunki">Rachunki</option>
+                        <option value="Zakupy">Zakupy</option>
+                        <option value="Mieszkanie">Mieszkanie</option>
+                        <option value="Zdrowie">Zdrowie</option>
+                        <option value="Edukacja">Edukacja</option>
+                        <option value="Pensja">Pensja</option> <option value="Inne">Inne</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="type">Typ Transakcji:</label>
+                    <select id="type" required>
+                        <option value="">Wybierz typ</option>
+                        <option value="income">Dochód</option>
+                        <option value="expense">Wydatek</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="date">Data i Czas:</label>
+                    <input type="datetime-local" id="date" required>
+                </div>
+                <button type="submit">Dodaj Transakcję</button>
+            </form>
+        </div>
+
+        <div class="transactions-section">
+            <h2>Ostatnie Transakcje</h2>
+            <ul id="transactions-list">
+                <li class="no-transactions">Brak transakcji do wyświetlenia. Dodaj pierwszą!</li>
+            </ul>
+        </div>
+
+        <div class="chart-section">
+            <h2>Podział Wydatków</h2>
+            <canvas id="expenses-chart"></canvas>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

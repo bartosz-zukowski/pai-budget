@@ -1,20 +1,28 @@
-# pai-budget/backend/app.py
-
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import os
 from datetime import datetime
 
 app = Flask(__name__)
-CORS(app) # Włączamy CORS dla całej aplikacji
+CORS(app)  
+
 
 # Konfiguracja bazy danych SQLite
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'budget.db')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # Wyłącza śledzenie modyfikacji obiektów (niepotrzebne i zużywa zasoby)
+db_path = os.path.join(basedir, 'budget.db') # Ścieżka do pliku bazy danych
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_path
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False 
 
 db = SQLAlchemy(app)
+
+# Debugowanie ścieżki bazy danych
+@app.before_request
+def debug_db_path():
+    if not hasattr(app, '_db_path_checked'): # Upewnij się, że drukuje się tylko raz
+        print(f"DEBUG: Configured DB URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
+        print(f"DEBUG: Absolute DB file path: {os.path.join(basedir, 'budget.db')}")
+        app._db_path_checked = True # Oznacz, że zostało to już sprawdzone
 
 # Model bazy danych dla transakcji
 class Transaction(db.Model):
@@ -44,7 +52,16 @@ class Transaction(db.Model):
 # Utworzenie bazy danych
 @app.before_request
 def create_tables():
-    db.create_all()
+    if not hasattr(app, '_database_initialized'):
+        with app.app_context():
+            db.create_all()
+            app._database_initialized = True
+
+
+# Nowy endpoint do serwowania pliku index.html
+@app.route('/')
+def serve_index():
+    return render_template('index.html')
 
 # Dodawanie nowej transakcji
 @app.route('/transactions', methods=['POST'])
@@ -57,7 +74,7 @@ def add_transaction():
     amount = data.get('amount')
     category = data.get('category')
     type = data.get('type')
-    date_str = data.get('date') # Data jako string, np. '2023-10-26T14:30:00'
+    date_str = data.get('date') # Data jako string, np. '2023-10-26T14:30:00Z'
 
     # Walidacja danych wejściowych
     if not all([title, amount, category, type, date_str]):
@@ -67,10 +84,9 @@ def add_transaction():
     if type not in ['income', 'expense']:
         return jsonify({'message': 'Type must be "income" or "expense"'}), 400
     try:
-        # Parsowanie daty z formatu ISO 8601
-        transaction_date = datetime.fromisoformat(date_str.replace('Z', '')) # Usunięcie 'Z' przed parsowaniem
+        transaction_date = datetime.fromisoformat(date_str.replace('Z', ''))
     except ValueError:
-        return jsonify({'message': 'Invalid date format. Use ISO 8601 (e.g., 2023-10-26T14:30:00)'}), 400
+        return jsonify({'message': 'Invalid date format. Use ISO 8601 (e.g., 2023-10-26T14:30:00Z)'}), 400
 
 
     new_transaction = Transaction(
@@ -81,9 +97,15 @@ def add_transaction():
         date=transaction_date
     )
 
-    db.session.add(new_transaction)
-    db.session.commit()
-    return jsonify(new_transaction.to_dict()), 201 # 201 Created
+    try:
+        db.session.add(new_transaction)
+        db.session.commit()
+        return jsonify(new_transaction.to_dict()), 201 # 201 Created
+    except Exception as e:
+        db.session.rollback() # Wycofaj zmiany w przypadku błędu
+        print(f"Błąd podczas dodawania transakcji: {e}") # Debugging
+        return jsonify({'message': f'Server error while adding transaction: {str(e)}'}), 500
+
 
 # Pobieranie wszystkich transakcji
 @app.route('/transactions', methods=['GET'])
@@ -100,7 +122,10 @@ def get_transaction(id):
 # Edycja transakcji
 @app.route('/transactions/<int:id>', methods=['PUT'])
 def update_transaction(id):
-    transaction = Transaction.query.get_or_404(id)
+    transaction = db.session.get(Transaction, id) # Użyj db.session.get dla pewności
+    if transaction is None:
+        return jsonify({'message': 'Transaction not found'}), 404
+        
     data = request.json
 
     if not data:
@@ -114,9 +139,10 @@ def update_transaction(id):
 
     if 'date' in data:
         try:
+            # Przetwarzanie daty z formatu ISO 8601
             transaction.date = datetime.fromisoformat(data['date'].replace('Z', ''))
         except ValueError:
-            return jsonify({'message': 'Invalid date format. Use ISO 8601 (e.g., 2023-10-26T14:30:00)'}), 400
+            return jsonify({'message': 'Invalid date format. Use ISO 8601 (e.g., 2023-10-26T14:30:00Z)'}), 400
 
     # Dodatkowa walidacja dla pól, jeśli są aktualizowane
     if not isinstance(transaction.amount, (int, float)) or transaction.amount <= 0:
@@ -124,21 +150,31 @@ def update_transaction(id):
     if transaction.type not in ['income', 'expense']:
         return jsonify({'message': 'Type must be "income" or "expense"'}), 400
 
-    db.session.commit()
-    return jsonify(transaction.to_dict())
+    try:
+        db.session.commit()
+        return jsonify(transaction.to_dict())
+    except Exception as e:
+        db.session.rollback()
+        print(f"Błąd podczas aktualizacji transakcji: {e}") # Debugging
+        return jsonify({'message': f'Server error while updating transaction: {str(e)}'}), 500
 
 # Usuwanie transakcji
 @app.route('/transactions/<int:id>', methods=['DELETE'])
 def delete_transaction(id):
-    transaction = db.session.get(Transaction, id) 
+    transaction = db.session.get(Transaction, id) # Użyj db.session.get dla pewności
     if transaction is None:
         return jsonify({'message': 'Transaction not found'}), 404
 
-    db.session.delete(transaction)
-    db.session.commit()
-    return jsonify({'message': 'Transaction deleted successfully'})
+    try:
+        db.session.delete(transaction)
+        db.session.commit()
+        return jsonify({'message': 'Transaction deleted successfully'})
+    except Exception as e:
+        db.session.rollback()
+        print(f"Błąd podczas usuwania transakcji: {e}") # Debugging
+        return jsonify({'message': f'Server error while deleting transaction: {str(e)}'}), 500
 
 if __name__ == '__main__':
-    with app.app_context(): 
+    with app.app_context():
         db.create_all() 
     app.run(debug=True, port=5000) # Uruchamia aplikację Flask na porcie 5000
